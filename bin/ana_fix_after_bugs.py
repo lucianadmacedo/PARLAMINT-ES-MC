@@ -1,4 +1,5 @@
 def get_words():
+    """Fixes tags that should be camel case, you should create a txt file of them"""
     with open('camel_case.txt','r') as f:
         camel = f.read().split('\n')
     dicio = {}
@@ -8,6 +9,7 @@ def get_words():
 
 get_words()
 def clean_words(text):
+    """Same as above"""
     camel = get_words()
     for i in camel:
         text = text.replace(
@@ -38,6 +40,8 @@ def separate_meta(text):
     return ('\n'.join(metadata), '\n'.join(data))
 
 def solve_file(filename, tofile, flag = False):
+    """Removes flag errors assigned by work_stanza.py to highlight the presence of 
+    enclitics (esp. for Spanish)"""
     text = load_file(filename)
     metadata, data = separate_meta(text)
     text_response = work_around_name(data)
@@ -49,8 +53,8 @@ def solve_file(filename, tofile, flag = False):
 
 
 
-
 def remove_char_name(tos):
+    """Converts stanza annotation into TEI format"""
     a, b = tos.split('type="')
     b = b.split('"')
     c = b[0].split("-")
@@ -61,6 +65,7 @@ def remove_char_name(tos):
     return tos
 
 def remove_un(text, flag = False):
+    """Continuation of the above"""
     text = text.split('\n')
     text_response = []
     close_name = 0
@@ -78,6 +83,7 @@ def remove_un(text, flag = False):
 
 
 def work_around_name(text):
+    """Workaround to deal with name tag"""
     text = text.split('\n')
     text_response = []
     close_name = 0
@@ -118,6 +124,8 @@ def work_around_name(text):
 
 import os
 files = os.listdir('result/')
+# Renames files to ana.xml. Creates two sets with error flags and no flags 
+# (error flags could be used for a manual fix).
 for index, file in enumerate(files):
     print(index)
     solve_file('result/' + file,
@@ -129,4 +137,3 @@ for index, file in enumerate(files):
     solve_file('result/' + file,
             'flag/' + file.replace('.xml','') + '.ana.xml',
             flag = True)
-
